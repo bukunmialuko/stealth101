@@ -1,27 +1,41 @@
 package com.example.stealth101.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.springframework.lang.NonNull;
 
+import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.util.UUID;
 
+@Entity
 public class Person {
-    private final UUID id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private UUID id ;
 
-    // Present in hibernate-validator
     @NotBlank
-    private final String name;
+    @NonNull
+    @Column
+    private String name;
 
-    public Person(@JsonProperty("id") UUID id, @JsonProperty("name") String name) {
-        this.id = id;
+    public Person() {
+    }
+
+    public Person(String name) {
         this.name = name;
     }
 
+
+    // Without this getter, when you make a get request, it wont be included
     public UUID getId() {
         return id;
     }
 
     public String getName() {
         return name;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
     }
 }

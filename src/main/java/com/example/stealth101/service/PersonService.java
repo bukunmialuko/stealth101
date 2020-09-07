@@ -1,7 +1,7 @@
 package com.example.stealth101.service;
 
-import com.example.stealth101.dao.PersonDao;
 import com.example.stealth101.model.Person;
+import com.example.stealth101.repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -13,32 +13,31 @@ import java.util.UUID;
 // Instantiate with @Component or @repository (Needed for di & spring)
 @Service
 public class PersonService {
-    private final PersonDao personDao;
 
-    // We can have multiple implementations of th dao, so we use
-    // qualifiers
     @Autowired
-    public PersonService(@Qualifier("fakeDao") PersonDao personDao) {
-        this.personDao = personDao;
-    }
+    private PersonRepository personRepository;
 
-    public int addPerson(Person person) {
-        return personDao.insertPerson(person);
+    public void addPerson(Person person) {
+         personRepository.save(person);
     }
 
     public List<Person> getAllPeople() {
-        return personDao.selectAllPeople();
+        return personRepository.findAll();
     }
 
-    public Optional<Person> getPersonById(UUID id) {
-        return personDao.selectPersonById(id);
+    public Person getPersonById(UUID id) {
+        return personRepository.findById(id).orElse(null);
     }
 
-    public int deletePerson(UUID id){
-        return personDao.deletePersonById(id);
+    public void deletePerson(UUID id){
+        personRepository.deleteById(id);
     }
 
-    public  int updatePerson(UUID id, Person person){
-        return personDao.updatePersonById(id, person);
+    public void updatePerson(UUID id, Person person){
+        Optional<Person> personExists = personRepository.findById(id);
+        if (!personExists.isEmpty()) {
+            person.setId(id);
+            personRepository.save(person);
+        }
     }
 }

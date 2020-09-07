@@ -4,7 +4,6 @@ import com.example.stealth101.model.Person;
 import com.example.stealth101.service.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -22,7 +21,7 @@ public class PersonController {
     }
 
     @PostMapping
-    public void addPerson(@Valid @NonNull @RequestBody Person person) {
+    public void addPerson(@Valid @RequestBody Person person) {
         personService.addPerson(person);
     }
 
@@ -34,7 +33,7 @@ public class PersonController {
     // e.g localhost:8080/api/v1/person/0df76975-1de8-4f49-a798-48038296c218
     @GetMapping(path = "{id}")
     public Person getPersonById(@PathVariable("id") UUID id) {
-        return personService.getPersonById(id).orElse(null);
+        return personService.getPersonById(id);
     }
 
     @DeleteMapping(path = "{id}")
@@ -43,7 +42,7 @@ public class PersonController {
     }
 
     @PutMapping(path = "{id}")
-    public void updatePerson(@PathVariable("id") UUID id, @Valid @NonNull @RequestBody Person personToUpdate) {
+    public void updatePerson(@PathVariable("id") UUID id, @Valid @RequestBody Person personToUpdate) {
         personService.updatePerson(id, personToUpdate);
     }
 }
