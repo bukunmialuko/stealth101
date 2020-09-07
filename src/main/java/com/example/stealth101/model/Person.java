@@ -2,10 +2,14 @@ package com.example.stealth101.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import javax.validation.constraints.NotBlank;
 import java.util.UUID;
 
 public class Person {
     private final UUID id;
+
+    // Present in hibernate-validator
+    @NotBlank
     private final String name;
 
     public Person(@JsonProperty("id") UUID id, @JsonProperty("name") String name) {
